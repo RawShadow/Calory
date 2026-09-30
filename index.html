@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A simple calorie and nutrition tracker for everyday meal logging.">
+    <meta name="theme-color" content="#f7f7f2">
+    <title>Calory — Daily Nutrition Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar" id="sidebar" aria-label="Primary navigation">
+            <div class="brand">
+                <div class="brand-mark" aria-hidden="true">C</div>
+                <div>
+                    <strong>Calory</strong>
+                    <span>Daily Nutrition</span>
+                </div>
+            </div>
+
+            <nav class="side-nav">
+                <a href="#dashboard" class="nav-link active" data-section="dashboard">
+                    <span class="icon" aria-hidden="true">⌂</span>
+                    Dashboard
+                </a>
+                <a href="#food-log" class="nav-link" data-section="food-log">
+                    <span class="icon" aria-hidden="true">＋</span>
+                    Food log
+                </a>
+                <a href="#history" class="nav-link" data-section="history">
+                    <span class="icon" aria-hidden="true">◷</span>
+                    History
+                </a>
+                <a href="#goals" class="nav-link" data-section="goals">
+                    <span class="icon" aria-hidden="true">◎</span>
+                    Goals
+                </a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <button class="plain-button" id="exportBtn" type="button">
+                    <span class="icon" aria-hidden="true">↓</span>
+                    Export CSV
+                </button>
+                <button class="profile-chip" id="profileBtn" type="button" aria-label="Open profile settings">
+                    <span class="avatar">AJ</span>
+                    <span class="profile-copy">
+                        <strong>Arnav</strong>
+                        <small>Personal</small>
+                    </span>
+                    <span class="chevron" aria-hidden="true">›</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <button class="mobile-menu" id="menuBtn" type="button" aria-label="Open navigation">☰</button>
+                <div>
+                    <p class="eyebrow">NUTRITION / TODAY</p>
+                    <h1 id="pageTitle">Dashboard</h1>
+                </div>
+                <div class="topbar-actions">
+                    <button class="icon-button" id="themeBtn" type="button" aria-label="Toggle dark mode">◐</button>
+                    <button class="date-pill" id="todayBtn" type="button">Today · <span id="todayLabel">—</span></button>
+                </div>
+            </header>
+
+            <section class="section-panel active" id="dashboard">
+                <div class="welcome-row">
+                    <div>
+                        <p class="muted">Good day, Arnav.</p>
+                        <h2>Keep the numbers simple.</h2>
+                    </div>
+                    <button class="primary-button" id="quickAddBtn" type="button">
+                        <span aria-hidden="true">+</span> Log food
+                    </button>
+                </div>
+
+                <div class="summary-grid">
+                    <article class="hero-card">
+                        <div class="hero-card-copy">
+                            <span class="card-kicker">CALORIES</span>
+                            <div class="hero-number"><span id="caloriesLeft">2000</span><small> kcal left</small></div>
+                            <p><span id="caloriesConsumed">0</span> eaten of <span id="calorieGoalText">2000</span> kcal</p>
+                        </div>
+                        <div class="ring" id="calorieRing" aria-label="Calories consumed">
+                            <div class="ring-inner">
+                                <strong id="ringPercent">0%</strong>
+                                <span>of goal</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="stat-card">
+                        <span class="card-kicker">PROTEIN</span>
+                        <strong><span id="proteinValue">0</span><small> g</small></strong>
+                        <div class="meter"><span id="proteinMeter"></span></div>
+                        <div class="stat-footer"><span>Goal</span><span id="proteinGoalText">140g</span></div>
+                    </article>
+
+                    <article class="stat-card">
+                        <span class="card-kicker">CARBS</span>
+                        <strong><span id="carbsValue">0</span><small> g</small></strong>
+                        <div class="meter"><span id="carbsMeter"></span></div>
+                        <div class="stat-footer"><span>Goal</span><span id="carbsGoalText">220g</span></div>
+                    </article>
+
+                    <article class="stat-card">
+                        <span class="card-kicker">FAT</span>
+                        <strong><span id="fatValue">0</span><small> g</small></strong>
+                        <div class="meter"><span id="fatMeter"></span></div>
+                        <div class="stat-footer"><span>Goal</span><span id="fatGoalText">65g</span></div>
+                    </article>
+                </div>
+
+                <div class="dashboard-grid">
+                    <article class="panel chart-panel">
+                        <div class="panel-heading">
+                            <div>
+                                <span class="card-kicker">LAST 7 DAYS</span>
+                                <h3>Calories at a glance</h3>
+                            </div>
+                            <span class="small-note" id="weeklyAverage">Avg — kcal</span>
+                        </div>
+                        <div class="chart-wrap">
+                            <canvas id="weeklyChart" height="220" aria-label="Seven day calorie chart"></canvas>
+                        </div>
+                    </article>
+
+                    <article class="panel meal-overview">
+                        <div class="panel-heading">
+                            <div>
+                                <span class="card-kicker">TODAY</span>
+                                <h3>Meals</h3>
+                            </div>
+                            <button class="text-button" id="viewLogBtn" type="button">View log →</button>
+                        </div>
+                        <div id="mealOverviewList" class="meal-list compact"></div>
+                    </article>
+                </div>
+
+                <article class="panel insight-panel">
+                    <div class="insight-icon" aria-hidden="true">i</div>
+                    <div>
+                        <strong id="insightTitle">Nothing logged yet.</strong>
+                        <p id="insightText">Add your first meal and your day will start taking shape here.</p>
+                    </div>
+                </article>
+            </section>
+
+            <section class="section-panel" id="food-log">
+                <div class="section-header-row">
+                    <div>
+                        <p class="muted">Build your day one plate at a time.</p>
+                        <h2>Food log</h2>
+                    </div>
+                    <button class="primary-button" id="addFoodBtn" type="button">+ Add food</button>
+                </div>
+
+                <div class="log-date-row">
+                    <button class="date-control" id="prevDayBtn" type="button" aria-label="Previous day">←</button>
+                    <strong id="logDateLabel">Today</strong>
+                    <button class="date-control" id="nextDayBtn" type="button" aria-label="Next day">→</button>
+                    <button class="today-link" id="logTodayBtn" type="button">Jump to today</button>
+                </div>
+
+                <div id="fullMealList" class="meal-groups"></div>
+            </section>
+
+            <section class="section-panel" id="history">
+                <div class="section-header-row">
+                    <div>
+                        <p class="muted">Patterns matter more than one day.</p>
+                        <h2>History</h2>
+                    </div>
+                    <div class="history-summary">
+                        <div><span>7-day avg</span><strong id="historyAvg">—</strong></div>
+                        <div><span>Days logged</span><strong id="historyDays">—</strong></div>
+                    </div>
+                </div>
+
+                <article class="panel history-panel">
+                    <div class="history-table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Calories</th>
+                                    <th>Protein</th>
+                                    <th>Carbs</th>
+                                    <th>Fat</th>
+                                    <th>Goal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTable"></tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+
+            <section class="section-panel" id="goals">
+                <div class="section-header-row">
+                    <div>
+                        <p class="muted">Set targets that fit your routine.</p>
+                        <h2>Goals</h2>
+                    </div>
+                </div>
+
+                <article class="panel goals-panel">
+                    <form id="goalsForm">
+                        <div class="form-header">
+                            <div>
+                                <span class="card-kicker">DAILY TARGETS</span>
+                                <h3>Nutrition goals</h3>
+                            </div>
+                            <p>These values drive the dashboard and progress meters.</p>
+                        </div>
+
+                        <div class="goal-form-grid">
+                            <label>
+                                <span>Calories</span>
+                                <div class="field-with-unit">
+                                    <input id="goalCalories" type="number" min="500" max="10000" step="50" required>
+                                    <span>kcal</span>
+                                </div>
+                            </label>
+                            <label>
+                                <span>Protein</span>
+                                <div class="field-with-unit">
+                                    <input id="goalProtein" type="number" min="0" max="500" step="1" required>
+                                    <span>g</span>
+                                </div>
+                            </label>
+                            <label>
+                                <span>Carbs</span>
+                                <div class="field-with-unit">
+                                    <input id="goalCarbs" type="number" min="0" max="800" step="1" required>
+                                    <span>g</span>
+                                </div>
+                            </label>
+                            <label>
+                                <span>Fat</span>
+                                <div class="field-with-unit">
+                                    <input id="goalFat" type="number" min="0" max="300" step="1" required>
+                                    <span>g</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="form-actions">
+                            <button class="primary-button" type="submit">Save goals</button>
+                            <span class="save-status" id="goalStatus" aria-live="polite"></span>
+                        </div>
+                    </form>
+                </article>
+
+                <article class="panel note-card">
+                    <span class="card-kicker">NOTE</span>
+                    <p>This tracker is for logging and awareness. Nutrition targets can vary widely by person, activity, and goal.</p>
+                </article>
+            </section>
+        </main>
+    </div>
+
+    <dialog class="modal" id="foodModal">
+        <form method="dialog" class="modal-card" id="foodForm">
+            <div class="modal-header">
+                <div>
+                    <span class="card-kicker">ADD TO LOG</span>
+                    <h2>Log a food</h2>
+                </div>
+                <button class="close-button" value="cancel" type="submit" aria-label="Close">×</button>
+            </div>
+
+            <div class="food-search">
+                <label for="foodSearch">Search your quick list</label>
+                <input id="foodSearch" type="search" placeholder="Try “chicken”, “rice”, or “banana”" autocomplete="off">
+                <div class="food-results" id="foodResults"></div>
+            </div>
+
+            <div class="selected-food" id="selectedFoodCard">
+                <div>
+                    <strong id="selectedFoodName">Custom food</strong>
+                    <span id="selectedFoodMeta">Enter the nutrition for your serving.</span>
+                </div>
+                <button type="button" class="clear-selection" id="clearSelection">Clear</button>
+            </div>
+
+            <div class="form-grid two-col">
+                <label>
+                    <span>Meal</span>
+                    <select id="mealType" required>
+                        <option value="Breakfast">Breakfast</option>
+                        <option value="Lunch">Lunch</option>
+                        <option value="Dinner">Dinner</option>
+                        <option value="Snacks">Snacks</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Food name</span>
+                    <input id="foodName" type="text" required placeholder="e.g. Paneer wrap">
+                </label>
+            </div>
+
+            <div class="form-grid four-col">
+                <label><span>Calories</span><input id="foodCalories" type="number" min="0" step="1" required></label>
+                <label><span>Protein</span><input id="foodProtein" type="number" min="0" step="0.1" required></label>
+                <label><span>Carbs</span><input id="foodCarbs" type="number" min="0" step="0.1" required></label>
+                <label><span>Fat</span><input id="foodFat" type="number" min="0" step="0.1" required></label>
+            </div>
+
+            <label class="quantity-field">
+                <span>Servings</span>
+                <input id="foodQuantity" type="number" min="0.25" step="0.25" value="1" required>
+            </label>
+
+            <div class="modal-actions">
+                <button class="secondary-button" type="button" id="cancelFood">Cancel</button>
+                <button class="primary-button" type="submit" value="default">Add to log</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog class="modal" id="profileModal">
+        <form method="dialog" class="modal-card small-modal">
+            <div class="modal-header">
+                <div>
+                    <span class="card-kicker">PROFILE</span>
+                    <h2>Personal</h2>
+                </div>
+                <button class="close-button" value="cancel" type="submit" aria-label="Close">×</button>
+            </div>
+            <div class="profile-large">
+                <div class="avatar large">AJ</div>
+                <div>
+                    <strong>Arnav</strong>
+                    <p>Data stays in this browser.</p>
+                </div>
+            </div>
+            <div class="profile-settings">
+                <button type="button" class="secondary-button" id="clearDataBtn">Clear local data</button>
+            </div>
+        </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
